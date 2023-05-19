@@ -128,17 +128,21 @@ class EtfMon:
             mysql_conn.ExecNonQuery(ins_sql, val)
 
 
+    def etfSendYjMsg(self):
+        mysql_conn = DBUtil(host='127.0.0.1', user="root", pwd="Boco@123", db="gpdb")
+        yj_sql=""
+
+
 
 
 if __name__ == "__main__":
     codes=['516950','510500']
-    now = datetime.datetime.now().strftime("%Y%m%d")
-    d=20230331
+    #now = datetime.datetime.now().strftime("%Y%m%d")
+   # EtfMon().insUpOrDown(now, 40)
+    d=20230519
    # d = datetime.strptime(d, '%Y-%m-%d').date()
-    i=0
-    while i<20:
-        EtfMon().insUpOrDown(str(d), 40)
-        d=d-1
-        i=i+1
-
+    while d<20230520:
+        EtfMon().insUpOrDown(str(d), 60)
+        d=d+1
+# d
     #print(rt)

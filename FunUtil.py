@@ -174,6 +174,36 @@ class FunUtil:
             all_item.get('data').append(item_del)
         return all_item
 
+    def getOneEtfList(self,code):
+        mysql_conn = DBUtil(host='127.0.0.1', user="root", pwd="Boco@123", db="gpdb")
+        sel_sql="select a.* from monitor_etf_gp a ,( "\
+                "select code,max(event_day) event_day,start_day,max(end_day) end_day,up_or_down,max(uddays)  uddays "\
+                "from monitor_etf_gp where code = %s "\
+                "group by code,start_day,up_or_down) b "\
+                "where a.code=b.code and a.event_day=b.event_day "\
+                "order by code,event_day desc"
+        val=(code)
+        dellist_rt = mysql_conn.ExecQueryVal(sel_sql, val)
+        all_item = [];
+        for i in range(len(dellist_rt)):
+            item_del = {}
+            item_del['id'] = int(dellist_rt[i][0])+int(dellist_rt[i][1].strftime("%Y%m%d"))
+            item_del['code']= dellist_rt[i][0]
+            item_del['event_day']= dellist_rt[i][1].strftime("%Y-%m-%d")
+            item_del['start_day']= dellist_rt[i][2].strftime("%Y-%m-%d")
+            item_del['end_day']= dellist_rt[i][3].strftime("%Y-%m-%d")
+            item_del['start_close']= dellist_rt[i][4]
+            item_del['end_close']= dellist_rt[i][5]
+            item_del['up_or_down'] = dellist_rt[i][6]
+            item_del['ma5']= dellist_rt[i][7]
+            item_del['uddays']= dellist_rt[i][8]
+            item_del['angle'] = dellist_rt[i][9]
+            item_del['ud_rate'] = dellist_rt[i][10]
+            item_del['ma5_rate'] = dellist_rt[i][11]
+            item_del['close_rate'] = dellist_rt[i][12]
+            all_item.append(item_del)
+        return all_item
+
 
 if __name__ == "__main__":
     codes=['159905','1111']
@@ -184,6 +214,6 @@ if __name__ == "__main__":
     val=val+(sday,)
     val=val+(eday,)
 
-    rs=FunUtil().getMonitorMsgListNew(sday=None,eday=None)
+    rs=FunUtil().getMonitorMsgListNew(sday=None,eday=None,code=None,ud=None)
 
     print(rs)

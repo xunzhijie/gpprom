@@ -106,6 +106,11 @@ async def get_msg(sday:Optional[str] = None,eday:Optional[str] = None,code:Optio
     result=FunUtil().getMonitorMsgListNew(sday=sday,eday=eday,code=code,ud=up_or_down)
     return result
 
+@app.get("/api/monitor/oneEtflist")
+async def get_msg(code:str):
+    result=FunUtil().getOneEtfList(code)
+    return result
+
 # 在 Windows 中必须加上 if __name__ == "__main__"，否则会抛出 RuntimeError: This event loop is already running
 if __name__ == "__main__":
     # 启动服务，因为我们这个文件叫做 main.py，所以需要启动 main.py 里面的 app
